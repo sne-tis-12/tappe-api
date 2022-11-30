@@ -1,0 +1,49 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f2f2f2;
+}
+
+h1 {
+  color: #333;
+}
+
+h2 {
+  color: #666;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  padding: 1em;
+  margin-bottom: 10px;
+}
+
+li strong {
+  color: #444;
+}
+
+li:nth-child(odd) {
+  background-color: #ddd;
+}
+
+li:nth-child(even) {
+  background-color: #ccc;
+}
+
+li:hover {
+  background-color: #999;
+  color: #fff;
+}
+
+a {
+  color: #06c;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}

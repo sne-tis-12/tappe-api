@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>API Documentation</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <h1>API Documentation</h1>
+
+  <h2>/api/admin</h2>
+  <ul>
+    <li><strong>GET /</strong>: Endpoint for checking.</li>
+    <li><strong>POST /login</strong>: Endpoint to login the admin user. Accepts email and password as input.</li>
+    <li><strong>POST /register</strong>: Endpoint to register a new admin user. Accepts name, email, and password as
+      input.</li>
+    <li><strong>POST /logout</strong>: Endpoint to logout the admin user.</li>
+    <li><strong>POST /activate</strong>: Endpoint to activate a student card. Requires admin privileges. Accepts
+      student uid and card id as input.</li>
+    <li><strong>POST /addBalance</strong>: Endpoint to add balance to a student account. Requires admin privileges.
+      Accepts uid and amount as input.</li>
+  </ul>
+
+  <h2>/api/vendor</h2>
+  <ul>
+    <li><strong>GET /</strong>: Endpoint for the vendor dashboard.</li>
+    <li><strong>POST /login</strong>: Endpoint to login the vendor user. Accepts email and password as input.</li>
+    <li><strong>POST /register</strong>: Endpoint to register a new vendor user. Accepts name, email, password, and
+      store name as input.</li>
+    <li><strong>GET /products</strong>: Endpoint to get all the products of a vendor. Requires vendor privileges.</li>
+    <li><strong>POST /products/add</strong>: Endpoint to add a new product to a vendor's store. Requires vendor
+      privileges. Accepts name, description, price, and image as input.</li>
+    <li><strong>GET /products/:id</strong>: Endpoint to get a specific product of a vendor. Requires vendor privileges.
+      Accepts product ID as input.</li>
+    <li><strong>PUT /products/:id/edit</strong>: Endpoint to update a specific product of a vendor. Requires vendor
+      privileges. Accepts product ID, name, description, price, and image as input.</li>
+    <li><strong>DELETE /products/:id/delete</strong>: Endpoint to delete a specific product of a vendor. Requires vendor
+      privileges. Accepts product ID as input.</li>
+  </ul>
+
+  <h2>/api/student</h2>
+  <ul>
+    <li><strong>GET /</strong>: Endpoint for the student dashboard.</li>
+    <li><strong>POST /login</strong>: Endpoint to login the student user. Accepts uid and password as input.</li>
+    <li><strong>POST /register</strong>: Endpoint to register a new student user. Accepts name, email, uid, and password as
+      input.</li>
+    <li><strong>POST /logout</strong>: Endpoint to logout the student user.</li>
+  </ul>
+
+  <h2>/api/public</h2>
+  <ul>
+    <li><strong>GET /</strong>: Endpoint for the public dashboard</li>
+    <li><strong>POST /products</strong>
+      Endpoint to get all the available products.</li>
+
+    <li><strong>GET /products/:id</strong>
+      Endpoint to get a specific product. Accepts product ID as input.</li>
+
+    <li><strong>GET /vendors</strong>
+      Endpoint to get all the available vendors.</li>
+
+    <li><strong>GET /vendors/:id</strong>
+      Endpoint to get a specific vendor. Accepts vendor ID as input.</li>
+  </ul>
+  <script>
+      // Get all the section headings
+const sectionHeadings = document.querySelectorAll("h2");
+
+// Loop through the section headings and add an event listener to each one
+sectionHeadings.forEach(section => {
+  // Get the endpoint associated with the section heading
+  const endpoint = section.nextElementSibling.querySelector("strong").textContent;
+
+  // Add an event listener to the section heading
+  section.addEventListener("click", () => {
+    // Redirect to the endpoint when the section heading is clicked
+    window.location.href = `${section.textContent.toLowerCase()}${endpoint}`;
+  });
+});
+
+  </script>
+</body>
+</html>

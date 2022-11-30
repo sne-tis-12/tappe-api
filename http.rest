@@ -1,0 +1,147 @@
+### Basic Home Page
+GET https://j4z3ts-3000.csb.app/
+
+### Admin API
+### Basic Check Request
+
+GET https://j4z3ts-3000.csb.app/api/admin
+
+### Register Request
+
+POST https://j4z3ts-3000.csb.app/api/admin/register
+Content-Type: application/json
+
+{
+  "name":"Vaibhav Sisodiya",
+  "email":"sisodiya.vaib215@gmail.com",
+  "password":"Admin@123"
+}
+
+### Login Request
+
+POST https://j4z3ts-3000.csb.app/api/admin/login
+Content-Type: application/json
+
+{
+  "email":"sisodiya.vaib215@gmail.com",
+  "password":"Admin@123"
+}
+
+### Logout Request
+
+POST https://j4z3ts-3000.csb.app/api/admin/logout
+
+### Activate Student Card
+
+POST https://j4z3ts-3000.csb.app/api/admin/activate
+
+Cookie: "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY0MTQ5NGNhMjNhZDhhMmI1ZTFlNGFiZCIsIm5hbWUiOiJWYWliaGF2IEt1bWFyIFNpbmdoIiwiZW1haWwiOiJzaXNvZGl5YS52YWliMjE1QGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJiJDEwJDBWcEhEMDhPSzI0LmZ5S1BaMFEyRXV2VHppQldsekM4SGUvNUxBbDhuSjZlaE5XeHlNbzl5IiwiY3JlYXRlZEF0IjoiMjAyMy0wMy0xN1QxNjoyNjo1MC4yNTdaIiwidXBkYXRlZEF0IjoiMjAyMy0wMy0xN1QxNjoyNjo1MC4yNTdaIiwiX192IjowfSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjc5MTMzNjQ2LCJleHAiOjE2NzkyMjAwNDZ9.DFXvbTfWA5zqgt4ohBh0nRG1vDDbCimZLS_rz8tJbhE;"
+
+Content-Type: application/json
+
+{
+  "uid":"21BCS10561",
+  "card_id":"2381608295"
+}
+
+
+### Student API
+### Basic Check Request
+
+GET https://j4z3ts-3000.csb.app/api/student
+
+### Register Request
+
+POST https://j4z3ts-3000.csb.app/api/student/register
+Content-Type: application/json
+
+{
+  "email":"sisodiya.vaib215@gmail.com",
+  "uid":"21BCS10561",
+  "name":"Vaibhav Sisodiya",
+  "password":"Student@123"
+}
+
+### Login Request
+
+POST https://j4z3ts-3000.csb.app/api/student/login
+Content-Type: application/json
+
+{
+  "uid":"21BCS10561",
+  "password":"Student@123"
+}
+
+### Logout Request
+
+POST https://j4z3ts-3000.csb.app/api/student/logout
+
+### Vendor API
+### Basic Check Request
+
+GET https://j4z3ts-3000.csb.app/api/vendor
+
+### Register Request
+
+POST https://j4z3ts-3000.csb.app/api/vendor/register
+Content-Type: application/json
+
+{
+  "email":"sisodiya.vaib215@gmail.com",
+  "name":"Vaibhav Sisodiya",
+  "address":"Near Gate 2, Chandigarh University",
+  "phone":"6378845965",
+  "password":"Vendor@123"
+}
+
+### Login Request
+
+POST https://j4z3ts-3000.csb.app/api/vendor/login
+Content-Type: application/json
+
+{
+  "email":"sisodiya.vaib215@gmail.com",
+  "password":"Vendor@123"
+}
+
+### Logout Request
+
+POST https://j4z3ts-3000.csb.app/api/vendor/logout
+
+### Get all Products
+
+GET https://j4z3ts-3000.csb.app/api/vendor/products
+
+### Add Product 
+
+POST https://j4z3ts-3000.csb.app/api/vendor/products/add
+Content-Type: application/json
+
+{
+  "name":"Burger",
+  "short_name":"Brgr",
+  "price":"50",
+  "description":"Burger with cheese",
+  "image_url":"https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pinterest.com%2Fpin%2F479000000000000000"
+}
+
+### Get single Product
+
+GET https://j4z3ts-3000.csb.app/api/vendor/products/:id
+
+### Update Product
+
+PUT https://j4z3ts-3000.csb.app/api/vendor/products/:id
+Content-Type: application/json
+
+{
+  "name":"Burger",
+  "short_name":"Brgr",
+  "price":"80",
+  "description":"Burger with cheese",
+  "image_url":"https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pinterest.com%2Fpin%2F479000000000000000"
+}
+
+### Delete Product
+
+DELETE https://j4z3ts-3000.csb.app/api/vendor/products/:id
