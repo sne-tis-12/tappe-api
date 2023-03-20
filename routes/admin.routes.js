@@ -14,11 +14,5 @@ adminRouter.post(
   isAdmin,
   adminController.activate
 );
-adminRouter.post(
-  "/addBalance",
-  authMiddleware,
-  isAdmin,
-  adminController.addBalance
-);
 
 export default adminRouter;

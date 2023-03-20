@@ -21,6 +21,13 @@ const AdminSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  tokens: [
+    {
+      token: {
+        type: String,
+      },
+    },
+  ]
 });
 
 export default mongoose.model("Admin", AdminSchema);

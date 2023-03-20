@@ -32,8 +32,7 @@ app.listen("3000", () => {
 });
 
 mongoose.connect(
-  "mongodb+srv://tappe:Tappe123@tappe-cluster.hoj7r2p.mongodb.net/?retryWrites=true&w=majority",
-  { useNewUrlParser: true, useUnifiedTopology: true }
+  "mongodb+srv://tappe:Tappe123@tappe-cluster.hoj7r2p.mongodb.net/?retryWrites=true&w=majority"
 );
 
 const db = mongoose.connection;

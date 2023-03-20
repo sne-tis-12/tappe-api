@@ -1,6 +1,8 @@
 import jwt from 'jsonwebtoken';
+import Admin from '../models/admin.model.js';
+import Vendor from '../models/vendor.model.js';
 
-export const authMiddleware = (req, res, next) => {
+export const authMiddleware = async (req, res, next) => {
   const token = req.cookies.token; // Assuming you are storing the JWT token in a cookie named 'token'
 
   if (!token) {
@@ -11,8 +13,26 @@ export const authMiddleware = (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.role = decoded.role; // Set the role on the req object
     req.user = decoded.user; // Set the user object on the req object
+    if(req.role === 'admin') {
+      // Find admin by id
+      const admin = await Admin.findById(req.user._id);
+      // Check if the token is in the admin's token array
+      const tokenExists = admin.tokens.some((tokenObj) => tokenObj.token === token);
+      if (!tokenExists) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+    } else if(req.role === 'vendor') {
+      // Find vendor by id
+      const vendor = await Vendor.findById(req.user._id);
+      // Check if the token is in the vendor's token array
+      const tokenExists = vendor.tokens.some((tokenObj) => tokenObj.token === token);
+      if (!tokenExists) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+    }
     next();
   } catch (error) {
+    console.log(error)
     return res.status(401).json({ success: false, message: 'Unauthorized' });
   }
 };

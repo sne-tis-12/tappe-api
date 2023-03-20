@@ -17,27 +17,34 @@ const register = async (req, res, next) => {
   const { email, password, name, address, phone } = req.body;
   const vendorExists = await Vendor.findOne({ email });
   try {
-    // Check if vendor already exists
     if (vendorExists) throw new Error("Vendor already exists");
-    // Create new vendor
-    // Encrypt password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-    const vendor = await Vendor.create({
+    await Vendor.create({
       email,
       password: hashedPassword,
       name,
       address,
       phone,
     });
-    // Set vendor session using jwt
-    const token = jwt.sign(
-      { user: vendor, role: "vendor" },
-      process.env.JWT_SECRET,
-      { expiresIn: "1d" }
-    );
-    res.cookie("token", token, { httpOnly: true });
-    res.status(201).json({ message: "Vendor created successfully", vendor });
+    res.status(201).json({ message: "Vendor created successfully", success: true });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const verifyToken = async (req, res, next) => {
+  try {
+    const { token, cred } = req.body;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const { email } = decoded.user;
+    if (cred.toLowerCase() === email.toLowerCase()) {
+      const vendor = await Vendor.findOne({ email: email.toLowerCase() });
+      const { password: _, ...restDetailsOfVendor } = vendor.toObject();
+      res.status(200).json({ success: true, vendor: restDetailsOfVendor });
+    } else {
+      res.status(401).json({ success: false });
+    }
   } catch (error) {
     next(error);
   }
@@ -47,26 +54,17 @@ const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const vendor = await Vendor.findOne({ email });
-    // match password with hashed password
     const isMatch = vendor && (await bcrypt.compare(password, vendor.password));
     if (!isMatch || !vendor) throw new Error("Invalid credentials");
-    // Set vendor session using jwt
+    const { password: _, ...restDetailsOfVendor } = vendor.toObject();
     const token = jwt.sign(
-      { user: vendor, role: "vendor" },
+      { user: restDetailsOfVendor, role: "vendor" },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
-    res.cookie("token", token, { httpOnly: true });
-    res.status(200).json({ message: "Logged in successfully", vendor });
-  } catch (error) {
-    next(error);
-  }
-};
-
-const logout = async (req, res, next) => {
-  try {
-    res.clearCookie("token");
-    res.status(200).json({ success: true });
+    res
+      .status(200)
+      .json({ success: true, message: "Logged in successfully", token });
   } catch (error) {
     next(error);
   }
@@ -144,7 +142,7 @@ export const vendorController = {
   home,
   register,
   login,
-  logout,
+  verifyToken,
   getProducts,
   addProduct,
   getProduct,

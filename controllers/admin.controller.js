@@ -15,25 +15,29 @@ const home = async (req, res, next) => {
 
 const register = async (req, res, next) => {
   const { email, password, name } = req.body;
-  const adminExists = await Admin.findOne({ email });
   try {
+    const adminExists = await Admin.findOne({ email });
+
     // Check if admin already exists
     if (adminExists) throw new Error("Admin already exists");
+
     // Create new admin
-    // Encrypt password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
     const admin = await Admin.create({ email, password: hashedPassword, name });
-    // Set admin session using jwt
+
+    // Generate token and save to database
     const token = jwt.sign(
-      { user: admin, role: "admin" },
+      { user: admin.toObject(), role: "admin" },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
-    res.clearCookie("token");
-    res.cookie("token", token, { httpOnly: true });
+    admin.tokens.push({ token });
+    await admin.save();
 
-    res.status(201).json({ message: "Admin created successfully", admin });
+    // Set token cookie and send response
+    res.cookie("token", token, {httpOnly:true});
+    res.status(201).json({ message: "Admin created successfully", admin: admin.toObject() });
   } catch (error) {
     next(error);
   }
@@ -46,16 +50,15 @@ const login = async (req, res, next) => {
     // match password with hashed password
     const isMatch = admin && (await bcrypt.compare(password, admin.password));
     if (!isMatch || !admin) throw new Error("Invalid credentials");
+    const { password: _, ...restDetailsOfAdmin } = admin.toObject();
     // Set admin session using jwt
     const token = jwt.sign(
-      { user: admin, role: "admin" },
+      { user: restDetailsOfAdmin, role: "admin" },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
-    res.cookie("token", token, {
-      httpOnly: true,
-    });
-    res.status(200).json({ message: "Logged in successfully", admin });
+    res.cookie("token", token);
+    res.status(200).json({ message: "Logged in successfully", admin: restDetailsOfAdmin });
   } catch (error) {
     next(error);
   }
@@ -63,8 +66,9 @@ const login = async (req, res, next) => {
 
 const logout = async (req, res, next) => {
   try {
-    res.cookie("token", "null", { httpOnly: true });
-    res.status(200).json({ success: true, message: "Logged Out Successfully" });
+    // Remove token from database
+    res.cookie("token", "loggedout", {httpOnly:true});
+    res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
     next(error);
   }
@@ -93,32 +97,10 @@ const activate = async (req, res, next) => {
   }
 };
 
-const addBalance = async (req, res, next) => {
-  const { uid, amount } = req.body;
-  try {
-    const student = Student.findOne({ uid });
-    if (!student) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Student not found" });
-    }
-    const newBalance = student.balance + amount;
-    // Update student balance
-    student.balance = newBalance;
-    await student.save();
-    res
-      .status(200)
-      .json({ success: true, message: "Balance added successfully", student });
-  } catch (error) {
-    next(error);
-  }
-};
-
 export const adminController = {
   home,
   register,
   login,
   logout,
   activate,
-  addBalance,
 };
